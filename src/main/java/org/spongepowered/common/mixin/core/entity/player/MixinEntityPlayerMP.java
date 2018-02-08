@@ -308,15 +308,12 @@ public abstract class MixinEntityPlayerMP extends MixinEntityPlayer implements P
         // Sponge start
         DestructEntityEvent.Death event = SpongeCommonEventFactory.callDestructEntityEventDeath((EntityPlayerMP) (Object) this, cause);
         // Double check that the PhaseTracker is already capturing the Death phase
-        final PhaseTracker phaseTracker;
         final boolean tracksEntityDeaths;
         if (!this.world.isRemote) {
-            phaseTracker = PhaseTracker.getInstance();
-            final PhaseData peek = phaseTracker.getCurrentPhaseData();
+            final PhaseData peek = PhaseTracker.getInstance().getCurrentPhaseData();
             final IPhaseState state = peek.state;
             tracksEntityDeaths = state.tracksEntityDeaths();
         } else {
-            phaseTracker = null;
             tracksEntityDeaths = false;
         }
         try (PhaseContext<?> context = !tracksEntityDeaths ? EntityPhase.State.DEATH.createPhaseContext()
