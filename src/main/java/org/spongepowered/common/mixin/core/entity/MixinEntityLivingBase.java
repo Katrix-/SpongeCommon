@@ -258,7 +258,10 @@ public abstract class MixinEntityLivingBase extends MixinEntity implements Livin
     public void onDeath(DamageSource cause) {
         // Sponge Start - Call our event, and forge's event
         // This will transitively call the forge event
-        SpongeCommonEventFactory.callDestructEntityEventDeath((EntityLivingBase) (Object) this, cause);
+        if (SpongeCommonEventFactory.callDestructEntityEventDeath((EntityLivingBase) (Object) this, cause).isCancelled()) {
+            // Since the forge event is cancellable
+            return;
+        }
         // Double check that the PhaseTracker is already capturing the Death phase
         final PhaseTracker phaseTracker = PhaseTracker.getInstance();
         final boolean isMainThread = !this.world.isRemote || Sponge.isServerAvailable() && Sponge.getServer().isMainThread();
